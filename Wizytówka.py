@@ -1,55 +1,54 @@
 from faker import Faker
 fake=Faker()
-class BaseContact:
-    def __init__(self, imie, nazwisko, telefon, adres_email):
-        self.imie=imie
-        self.nazwisko=nazwisko
-        self.telefon=telefon
-        self.adres_email=adres_email
-        # Variables
-        self._lenght_fullname=0
-    def __str___(self):
-        return f'{self.imie} {self.nazwisko}'
-    def __repr__(self):
-        return f'{self.imie} {self.nazwisko} {self.adres_email}'
-    def contact(self):
-        contact=f'Wybieram numer {self.telefon} i dzwonię do {self.imie} {self.nazwisko}'
-        return contact
-    @property
-    def lenght_fullname(self):
-        self._lenght_fullname=len(self.imie) +len(self.nazwisko) +1
-        return self._lenght_fullname
-    @lenght_fullname.setter
-    def lenght_fullname(self,value):
-        if value==self._lenght_fullname:
-            self._lenght_fullname=value
-            return self._lenght_fullname
-        else:
-            self._lenght_fullname=self._lenght_fullname
-            return self._lenght_fullname
-class BusinessContact(BaseContact):
-    def __init__(self,stanowisko, nazwa_firmy, telefon_sluzbowy,*args,**kwargs,):
-        super().__init__(*args, **kwargs)
-        self.stanowisko=stanowisko
-        self.nazwa_firmy=nazwa_firmy
-        self.telefon_sluzbowy=telefon_sluzbowy
-    def contact(self):
-        contact=f'Wybieran numer {self.telefon_sluzbowy} i dzwonie do {self.imie} {self.nazwisko}'
-        return contact
-Person1=BaseContact(imie="alfred",nazwisko="reinhold",adres_email="alfredNreinhold@rhyta.com",telefon="+48 123456789")
-Person2=BusinessContact(imie="alfred",nazwisko="reinhold",adres_email="alfredNreinhold@rhyta.com",telefon_sluzbowy="+48 987654321",telefon="+48 123456789",stanowisko="student",nazwa_firmy="Kodilla")
 
-def create_contact():
-    visitor_type=int(input("Wybierz rodzaj wizytowki: 1=podstawowa, 2=biznesowa: "))
-    number_visitor=int(input("Podaj liczbę wizytowek: "))
-    if visitor_type==1:
-        for x in range(number_visitor):
-            Person_name=fake.name()
-            Person=BaseContact(imie=Person_name.split()[0], nazwisko=Person_name.split()[1], adres_email=fake.email(),telefon=fake.phone_number())
-            print(Person)
-    if visitor_type==2:
-        for x in range(number_visitor):
-            Person_name=fake.name()
-            Person=BusinessContact(imie=Person_name.split()[0], nazwisko=Person_name.split()[1], adres_email=fake.email(), telefon_sluzbowy=fake.phone_number(),telefon=fake.phone_number(),stanowisko=fake.job(), nazwa_firmy=fake.company())
-            print(Person)
-create_contact()
+class BaseContact:
+    def __init__(self, name, surname, phone, email):
+        self.name=name
+        self.surname=surname
+        self.phone=phone
+        self.email=email
+
+        self.label_lenght=len(self.name) +len(self.surname)
+
+    def __str___(self):
+        return f'{self.name} {self.surname}'
+
+    def __repr__(self):
+        return f'{self.name} {self.surname} {self.email}'
+
+    def contact(self):
+        contact=f'Wybieram numer {self.phone} i dzwonię do {self.name} {self.surname}'
+        return contact
+        
+    def label_lenght(self):
+        return self.label_lenght
+   
+class BusinessContact(BaseContact):
+    def __init__(self,position, company, phone_business,*args,**kwargs,):
+        super().__init__(*args, **kwargs)
+        self.positon=position
+        self.company=company
+        self.phone_business=phone_business
+    
+    def contact(self):
+        contact=f'Wybieran numer {self.phone_business} i dzwonie do {self.name} {self.surname}'
+        return contact
+
+person1=BaseContact(name="alfred",surname="reinhold",email="alfredNreinhold@rhyta.com",phone="+48 123456789")
+person2=BusinessContact(name="alfred",surname="reinhold",email="alfredNreinhold@rhyta.com",phone_business="+48 987654321",phone="+48 123456789",position="student",company="Kodilla")
+
+def create_contact(card_type, number_of_cards):
+    cards=list()
+    if card_type=="base":
+        for x in range(number_of_cards):
+            person_name=fake.name()
+            person=BaseContact(name=person_name.split()[0], surname=person_name.split()[1], email=fake.email(),phone=fake.phone_number())
+            cards.append(person)
+
+    if card_type=="business":
+        for x in range(number_of_cards):
+            person_name=fake.name()
+            person=BusinessContact(name=person_name.split()[0], surname=person_name.split()[1], email=fake.email(), phone_business=fake.phone_number(),phone=fake.phone_number(),position=fake.job(), company=fake.company())
+            cards.append(person)
+
+create_contact(card_type="business",number_of_cards=4)
